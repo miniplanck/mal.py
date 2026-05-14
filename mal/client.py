@@ -16,7 +16,7 @@ from mal.errors import (
     UnauthorizedError,
 )
 from mal.models import Anime, Auth, User, WatchStatus
-from mal.types import USER_ANIME_STATUS, USER_LIST_SORT
+from mal.types import SEASONAL_LIST_SORT, SEASONS, USER_ANIME_STATUS, USER_LIST_SORT
 
 AUTH_URL = "https://myanimelist.net/v1"
 BASE_URL = "https://api.myanimelist.net/v1"
@@ -287,6 +287,43 @@ class Client:
             f"&offset={offset}"
             f"&sort={sort}"
             f"&status={status}"
+            f"&fields={self.__ANIME_FIELDS}"
+            f"&nsfw={nsfw}"
+        )
+        resp = await self._get(url, token=token)
+        return [Anime(anime["node"], client=self) for anime in resp["data"]]
+    
+    async def get_seasonal_anime_list(
+        self,
+        *,
+        token: str,
+        limit: int = 1,
+        offset: int = 0,
+        sort: SEASONAL_LIST_SORT = "anime_num_list_users",
+        nsfw: bool = False,
+        year: int = 2026,
+        season: SEASONS = "summer",
+    ) -> list[Anime]:
+        """
+        Get a list of seasonal anime from MyAnimeList
+        :param token: The user's access token
+        :param limit: The number of results to return
+        :param offset: The number of results to skip (used for pagination)
+        :param sort: Sort results by the given sort type
+        :param nsfw: Whether to include NSFW content
+        :param year: The year of the season
+        :param season: The season
+        :return: list[Anime]
+        """
+        limit = max(0, min(limit, QUERY_LIMIT))
+        offset = max(0, min(offset, OFFSET_LIMIT))
+        season = season.lower()
+
+        url = (
+            f"{BASE_URL}/anime/season/{year}/{season}"
+            f"?limit={limit}"
+            f"&offset={offset}"
+            f"&sort={sort}"
             f"&fields={self.__ANIME_FIELDS}"
             f"&nsfw={nsfw}"
         )

@@ -12,6 +12,13 @@ USER_ANIME_STATUS = Literal[
     "watching", "completed", "on_hold", "dropped", "plan_to_watch"
 ]
 
+SEASONAL_LIST_SORT = Literal[
+    "anime_score", "anime_num_list_users"
+]
+SEASONS = Literal[
+    "winter", "spring", "summer", "fall"
+]
+
 MEDIA_TYPE = Literal["tv", "movie", "ova", "special", "ona", "music", "unknown"]
 ANIME_SOURCE = Literal[
     "original",
