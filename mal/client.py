@@ -317,7 +317,6 @@ class Client:
         """
         limit = max(0, min(limit, QUERY_LIMIT))
         offset = max(0, min(offset, OFFSET_LIMIT))
-        season = season.lower()
 
         url = (
             f"{BASE_URL}/anime/season/{year}/{season}"
